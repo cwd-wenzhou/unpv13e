@@ -13,7 +13,7 @@ str_cli(FILE *fp, int sockfd)
 		if (Readline(sockfd, recvline, MAXLINE) == 0)
 			err_quit("str_cli: server terminated prematurely");
 		//Fputs("hello ", stdout);
-		strcat(recvline,"--send by cwd");
+		strcat(recvline,"--send by cwd\n");
 		Fputs(recvline, stdout);
 	}
 }

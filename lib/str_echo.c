@@ -5,10 +5,10 @@ str_echo(int sockfd)
 {
 	ssize_t		n;
 	char		buf[MAXLINE];
-    //printf("run lb echo");
+    //printf("run lib echo");
 again:
 	while ( (n = read(sockfd, buf, MAXLINE)) > 0){
-		//strcpy(buf,"cwd");
+		//strcat(buf,"--send by ly\n");
 		Writen(sockfd, buf, n);
 	}
 		
