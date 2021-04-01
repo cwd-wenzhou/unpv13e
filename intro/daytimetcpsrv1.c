@@ -34,7 +34,7 @@ main(int argc, char **argv)
         ticks = time(NULL);
         snprintf(buff, sizeof(buff), "%.24s\r\n", ctime(&ticks));//按照format的格式格式化为字符串，然后再将其拷贝至str中。
 
-		char *p1 = "Hello world\n";
+		char *p1 = "Hello world cwd\n";
         Write(connfd, p1, strlen(p1));
         Write(connfd, buff, strlen(buff));
 

@@ -5,7 +5,7 @@ main(int argc, char **argv)
 {
 	int					sockfd;
 	struct sockaddr_in	servaddr;
-
+    //printf("run tcp01");
 	if (argc != 2)
 		err_quit("usage: tcpcli <IPaddress>");
 
