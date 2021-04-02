@@ -1,3 +1,4 @@
+//与02区别在于增加对accept函数调用出错返回<0值的处理
 #include	"unp.h"
 
 int

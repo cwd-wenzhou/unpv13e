@@ -20,6 +20,7 @@ main(int argc, char **argv)
 
 	Listen(listenfd, LISTENQ);
 
+//看Makefile文件 链接的是wait_pid
 	Signal(SIGCHLD, sig_chld);	/* must call waitpid() */
 
 	for ( ; ; ) {
