@@ -1,3 +1,4 @@
+//程序同tcpcli01.c ,修改了makefile里链接的str_cli()函数
 #include	"unp.h"
 
 int
