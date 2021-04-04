@@ -1,6 +1,6 @@
 /* include fig01 */
 #include	"unp.h"
-
+#define NOTDEF
 int
 main(int argc, char **argv)
 {
@@ -24,7 +24,7 @@ main(int argc, char **argv)
 	Listen(listenfd, LISTENQ);
 
 	maxfd = listenfd;			/* initialize */
-	maxi = -1;					/* index into client[] array */
+	maxi = -1;					/* index into client[] array 储存client[]用了多少位*/
 	for (i = 0; i < FD_SETSIZE; i++)
 		client[i] = -1;			/* -1 indicates available entry */
 	FD_ZERO(&allset);
@@ -34,7 +34,7 @@ main(int argc, char **argv)
 /* include fig02 */
 	for ( ; ; ) {
 		rset = allset;		/* structure assignment */
-		nready = Select(maxfd+1, &rset, NULL, NULL, NULL);
+		nready = Select(maxfd+1, &rset, NULL, NULL, NULL);//nready储存所有描述符集已就绪的总位数
 
 		if (FD_ISSET(listenfd, &rset)) {	/* new client connection */
 			clilen = sizeof(cliaddr);
@@ -42,15 +42,17 @@ main(int argc, char **argv)
 #ifdef	NOTDEF
 			printf("new client: %s, port %d\n",
 					Inet_ntop(AF_INET, &cliaddr.sin_addr, 4, NULL),
-					ntohs(cliaddr.sin_port));
+					ntohs(cliaddr.sin_port));//输出新连接的地址信息和端口号
 #endif
 
 			for (i = 0; i < FD_SETSIZE; i++)
+			//将第一个-1的client[i]取出来存connfd
 				if (client[i] < 0) {
 					client[i] = connfd;	/* save descriptor */
 					break;
 				}
 			if (i == FD_SETSIZE)
+			//FD_SETSIZE个的set都用完了，客户端连接过多了。
 				err_quit("too many clients");
 
 			FD_SET(connfd, &allset);	/* add new descriptor to set */
@@ -65,10 +67,10 @@ main(int argc, char **argv)
 
 		for (i = 0; i <= maxi; i++) {	/* check all clients for data */
 			if ( (sockfd = client[i]) < 0)
-				continue;
+				continue;//若client[i]=-1 继续循环
 			if (FD_ISSET(sockfd, &rset)) {
 				if ( (n = Read(sockfd, buf, MAXLINE)) == 0) {
-						/*4connection closed by client */
+						/*若连接已被客户端关闭 */
 					Close(sockfd);
 					FD_CLR(sockfd, &allset);
 					client[i] = -1;
