@@ -29,11 +29,13 @@ str_cli(FILE *fp, int sockfd)
 		}
 
 		if (FD_ISSET(fileno(fp), &rset)) {  /* input is readable */
+		//调用read时已到达文件末尾，返回值为0，进入if里面
 			if ( (n = Read(fileno(fp), buf, MAXLINE)) == 0) {
 				stdineof = 1;
 				Shutdown(sockfd, SHUT_WR);	/* send FIN */
 				FD_CLR(fileno(fp), &rset);
 				continue;
+				//从此以后只接受数据，不发送数据
 			}
 
 			Writen(sockfd, buf, n);
