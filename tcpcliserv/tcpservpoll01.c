@@ -2,6 +2,7 @@
 #include	"unp.h"
 #include	<limits.h>		/* for OPEN_MAX */
 #define OPEN_MAX  FOPEN_MAX
+#define NOTDEF
 int
 main(int argc, char **argv)
 {
@@ -24,8 +25,8 @@ main(int argc, char **argv)
 
 	Listen(listenfd, LISTENQ);
 
-	client[0].fd = listenfd;
-	client[0].events = POLLRDNORM;
+	client[0].fd = listenfd;//给定文件描述符
+	client[0].events = POLLRDNORM;//普通数据可读
 	for (i = 1; i < OPEN_MAX; i++)
 		client[i].fd = -1;		/* -1 indicates available entry */
 	maxi = 0;					/* max index into client[] array */
@@ -33,7 +34,7 @@ main(int argc, char **argv)
 
 /* include fig02 */
 	for ( ; ; ) {
-		nready = Poll(client, maxi+1, INFTIM);
+		nready = Poll(client, maxi+1, INFTIM);//timeout值设为-1，为一直等待
 
 		if (client[0].revents & POLLRDNORM) {	/* new client connection */
 			clilen = sizeof(cliaddr);
