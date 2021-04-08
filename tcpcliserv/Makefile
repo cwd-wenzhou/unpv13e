@@ -68,6 +68,9 @@ tcpservselect01:	tcpservselect01.o
 tcpservpoll01:	tcpservpoll01.o
 		${CC} ${CFLAGS} -o $@ tcpservpoll01.o ${LIBS}
 
+tcpservepoll:	tcpservepoll.o
+		${CC} ${CFLAGS} -o $@ tcpservepoll.o ${LIBS}
+
 tsigpipe:	tsigpipe.o
 		${CC} ${CFLAGS} -o $@ tsigpipe.o ${LIBS}
 

@@ -1,6 +1,6 @@
 /* include fig01 */
 #include	"unp.h"
-#define NOTDEF
+//#define NOTDEF
 int
 main(int argc, char **argv)
 {
