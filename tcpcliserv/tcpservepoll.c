@@ -43,10 +43,10 @@ main(int argc, char **argv)
         //step2: epoll开始工作 阻塞的等待文件描述符就绪
         int ret=epoll_wait(epoll_fd,events,10,-1);
 
-        //管他马的，先打印ret的值看看
+        //先打印ret的值看看
        // printf("ret=%d\n",ret);
 
-        //step3:epoll完成工作  看自己感兴趣的套接字是否就绪
+        //step3:epoll完成工作  看各个套接字状态
         if(ret<0){
             //epoll返回-1表示出错
             printf("epoll error\n");
@@ -89,10 +89,6 @@ main(int argc, char **argv)
                     }
                     else
                         write(connfd,buf,bytes);
-                    
-                    //event.data.fd=connfd;     //md为自定义类型，添加数据
-                    //event.events=EPOLLOUT|EPOLLET;
-                    //epoll_ctl(epoll_fd,EPOLL_CTL_MOD,listenfd,&event);//修改标识符，等待下一个循环时发送数据，异步处理的精髓
                 }
 
             }

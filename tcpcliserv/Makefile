@@ -4,7 +4,7 @@ PROGS =	tcpcli01 tcpcli04 tcpcli05 tcpcli06 \
 		tcpcli07 tcpcli08 tcpcli09 tcpcli10 \
 		tcpserv01 tcpserv02 tcpserv03 tcpserv04 \
 		tcpserv08 tcpserv09 tcpservselect01 tcpservpoll01 tsigpipe\
-		tcpserv_cwd tcpcli_cwd
+		tcpserv_cwd tcpcli_cwd tcpservepoll
 
 all:	${PROGS}
 
