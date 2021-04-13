@@ -1,4 +1,5 @@
 /* include udpservselect01 */
+//使用select函数的TCP和UDP回射服务器程序
 #include	"unp.h"
 
 int
@@ -23,6 +24,8 @@ main(int argc, char **argv)
 	servaddr.sin_port        = htons(SERV_PORT);
 
 	Setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
+	//设置SO_REUSEADDR套接字选项允许端口复用，以防该端口上已有连接存在
+
 	Bind(listenfd, (SA *) &servaddr, sizeof(servaddr));
 
 	Listen(listenfd, LISTENQ);
@@ -39,7 +42,7 @@ main(int argc, char **argv)
 /* end udpservselect01 */
 
 /* include udpservselect02 */
-	Signal(SIGCHLD, sig_chld);	/* must call waitpid() */
+	Signal(SIGCHLD, sig_chld);	/* 在一个进程终止或者停止时，将SIGCHLD信号发送给其父进程，must call waitpid() */
 
 	FD_ZERO(&rset);
 	maxfdp1 = max(listenfd, udpfd) + 1;
@@ -55,9 +58,9 @@ main(int argc, char **argv)
 
 		if (FD_ISSET(listenfd, &rset)) {
 			len = sizeof(cliaddr);
-			connfd = Accept(listenfd, (SA *) &cliaddr, &len);
+			connfd = Accept(listenfd, (SA *) &cliaddr, &len);//accept新的客户链接
 	
-			if ( (childpid = Fork()) == 0) {	/* child process */
+			if ( (childpid = Fork()) == 0) {	/* fork一个子进程 child process */
 				Close(listenfd);	/* close listening socket */
 				str_echo(connfd);	/* process the request */
 				exit(0);

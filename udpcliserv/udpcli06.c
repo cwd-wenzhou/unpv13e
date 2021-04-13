@@ -1,3 +1,4 @@
+//链接dgcliloop1.cpp用来测udp缓存区满丢包的现象，电脑比较好，测不出来的
 #include	"unp.h"
 
 int

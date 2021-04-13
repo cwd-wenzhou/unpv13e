@@ -1,3 +1,5 @@
+//链接dgcliconnect.cpp 
+//已连接的套接字在服务器挂掉后会收到icmp报文
 #include	"unp.h"
 
 int

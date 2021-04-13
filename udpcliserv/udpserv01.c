@@ -1,3 +1,4 @@
+//链接lib/dg_echo
 #include	"unp.h"
 
 int

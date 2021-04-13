@@ -12,6 +12,7 @@ dg_echo(int sockfd, SA *pcliaddr, socklen_t clilen)
 
 	Signal(SIGINT, recvfrom_int);
 
+	//相比dgecholoop1增加以下两行。扩容
 	n = 220 * 1024;
 	Setsockopt(sockfd, SOL_SOCKET, SO_RCVBUF, &n, sizeof(n));
 
