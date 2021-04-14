@@ -11,6 +11,7 @@ str_cli(FILE *fp, int sockfd)
 			Fputs(recvline, stdout);
 
 		kill(getppid(), SIGTERM);	/* in case parent still running */
+		Fputs("str_cli: server terminated prematurely ", stdout);
 		exit(0);
 	}
 

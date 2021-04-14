@@ -9,7 +9,8 @@ str_cli(FILE *fp, int sockfd)
 	fd_set		rset, wset;
 	char		to[MAXLINE], fr[MAXLINE];
 	char		*toiptr, *tooptr, *friptr, *froptr;
-
+	//先用fcntl把描述符都设为非阻塞
+	//Fcntl是unp.h文件里写的一个fcntl的封装，加了错误判断
 	val = Fcntl(sockfd, F_GETFL, 0);
 	Fcntl(sockfd, F_SETFL, val | O_NONBLOCK);
 
@@ -21,9 +22,9 @@ str_cli(FILE *fp, int sockfd)
 
 	toiptr = tooptr = to;	/* initialize buffer pointers */
 	friptr = froptr = fr;
-	stdineof = 0;
+	stdineof = 0;//标准输入是否结束的符号
 
-	maxfdp1 = max(max(STDIN_FILENO, STDOUT_FILENO), sockfd) + 1;
+	maxfdp1 = max(max(STDIN_FILENO, STDOUT_FILENO), sockfd) + 1;//作为select的第一个参数
 	for ( ; ; ) {
 		FD_ZERO(&rset);
 		FD_ZERO(&wset);
@@ -36,20 +37,22 @@ str_cli(FILE *fp, int sockfd)
 		if (froptr != friptr)
 			FD_SET(STDOUT_FILENO, &wset);	/* data to write to stdout */
 
-		Select(maxfdp1, &rset, &wset, NULL, NULL);
+		Select(maxfdp1, &rset, &wset, NULL, NULL);//调用select，不设置异常描述符集和超时
 /* end nonb1 */
 /* include nonb2 */
+		//标准输入处理
 		if (FD_ISSET(STDIN_FILENO, &rset)) {
 			if ( (n = read(STDIN_FILENO, toiptr, &to[MAXLINE] - toiptr)) < 0) {
 				if (errno != EWOULDBLOCK)
 					err_sys("read error on stdin");
-
+				//应该不会进这个if，但还是处理一下
 			} else if (n == 0) {
 #ifdef	VOL2
 				fprintf(stderr, "%s: EOF on stdin\n", gf_time());
 #endif
 				stdineof = 1;			/* all done with stdin */
 				if (tooptr == toiptr)
+				//标准输入结束，且全部内容已经发送给套接字，关闭连接
 					Shutdown(sockfd, SHUT_WR);/* send FIN */
 
 			} else {
@@ -61,6 +64,7 @@ str_cli(FILE *fp, int sockfd)
 			}
 		}
 
+		//套接字读处理
 		if (FD_ISSET(sockfd, &rset)) {
 			if ( (n = read(sockfd, friptr, &fr[MAXLINE] - friptr)) < 0) {
 				if (errno != EWOULDBLOCK)
@@ -86,6 +90,7 @@ str_cli(FILE *fp, int sockfd)
 		}
 /* end nonb2 */
 /* include nonb3 */
+		//标准输出处理
 		if (FD_ISSET(STDOUT_FILENO, &wset) && ( (n = friptr - froptr) > 0)) {
 			if ( (nwritten = write(STDOUT_FILENO, froptr, n)) < 0) {
 				if (errno != EWOULDBLOCK)
@@ -101,7 +106,7 @@ str_cli(FILE *fp, int sockfd)
 					froptr = friptr = fr;	/* back to beginning of buffer */
 			}
 		}
-
+		//套接字输出处理
 		if (FD_ISSET(sockfd, &wset) && ( (n = toiptr - tooptr) > 0)) {
 			if ( (nwritten = write(sockfd, tooptr, n)) < 0) {
 				if (errno != EWOULDBLOCK)

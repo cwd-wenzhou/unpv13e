@@ -1,4 +1,5 @@
 /* include web1 */
+//调用命令： ./web 3 www.github.com /  imagine1.gif imagine2.gif imagine3.gif
 #include	"web.h"
 
 int
@@ -20,13 +21,16 @@ main(int argc, char **argv)
 	}
 	printf("nfiles = %d\n", nfiles);
 
-	home_page(argv[2], argv[3]);
+	home_page(argv[2], argv[3]);//创建TCP连接，发出一个命令到服务器，然后读取主页
+	//需要在并行建立多个连接之前独自完成
 
 	FD_ZERO(&rset);
 	FD_ZERO(&wset);
 	maxfd = -1;
 	nlefttoread = nlefttoconn = nfiles;
-	nconn = 0;
+	//nlefttoread待读取的文件数
+	//nlefttoconn待连接的文件数
+	nconn = 0;//nconn当前打开着的连接数
 /* end web1 */
 /* include web2 */
 	while (nlefttoread > 0) {
@@ -46,6 +50,8 @@ main(int argc, char **argv)
 		ws = wset;
 		n = Select(maxfd+1, &rs, &ws, NULL, NULL);
 
+		//遍查file结构数组的每一个元素，确定哪些描述符需要处理
+		//处理所有就绪的描述符
 		for (i = 0; i < nfiles; i++) {
 			flags = file[i].f_flags;
 			if (flags == 0 || flags & F_DONE)
@@ -64,6 +70,7 @@ main(int argc, char **argv)
 				FD_CLR(fd, &wset);		/* no more writeability test */
 				write_get_cmd(&file[i]);/* write() the GET command */
 
+			//检查描述符是否有数据
 			} else if (flags & F_READING && FD_ISSET(fd, &rs)) {
 				if ( (n = Read(fd, buf, sizeof(buf))) == 0) {
 					printf("end-of-file on %s\n", file[i].f_name);
