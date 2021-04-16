@@ -14,6 +14,8 @@ main(int argc, char **argv)
 		err_quit("usage: daytimetcpsrv1 <service or port#>");
 
 	listenfd = Tcp_listen(NULL, argv[1], NULL);
+	//经测试，getaddrinfo传入NULL作为host，IP为0.0.0.0
+	//测试代码test1
 
 	for ( ; ; ) {
 		len = sizeof(cliaddr);

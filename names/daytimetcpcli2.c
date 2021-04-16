@@ -1,3 +1,5 @@
+//相比于daytimetcpcli1，把输入ip和端口号的行为先处理了，避免调用
+//gethostbyname和getservbyname来提高上述情况的处理效率
 #include	"unp.h"
 
 int
@@ -20,6 +22,7 @@ main(int argc, char **argv)
 		addrs[0] = &servaddr.sin_addr;
 		addrs[1] = NULL;
 		pptr = &addrs[0];
+		printf("RUN HERE1\n");
 	} else if ( (hp = gethostbyname(argv[1])) != NULL) {
 		pptr = (struct in_addr **) hp->h_addr_list;
 	} else

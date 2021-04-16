@@ -19,23 +19,26 @@ main(int argc, char **argv)
 		if (inet_aton(argv[1], &inetaddr) == 0) {
 			err_quit("hostname error for %s: %s", argv[1], hstrerror(h_errno));
 		} else {
+			printf("RUN HERE1\n");
 			inetaddrp[0] = &inetaddr;
 			inetaddrp[1] = NULL;
 			pptr = inetaddrp;
 		}
 	} else {
+		printf("RUN HERE2\n");
 		pptr = (struct in_addr **) hp->h_addr_list;
 	}
 
 	if ( (sp = getservbyname(argv[2], "tcp")) == NULL)
 		err_quit("getservbyname error for %s", argv[2]);
 
+	//放到循环外面，提高执行效率。后期改的
+	bzero(&servaddr, sizeof(servaddr));
+	servaddr.sin_family = AF_INET;
+	servaddr.sin_port = sp->s_port;
+
 	for ( ; *pptr != NULL; pptr++) {
 		sockfd = Socket(AF_INET, SOCK_STREAM, 0);
-
-		bzero(&servaddr, sizeof(servaddr));
-		servaddr.sin_family = AF_INET;
-		servaddr.sin_port = sp->s_port;
 		memcpy(&servaddr.sin_addr, *pptr, sizeof(struct in_addr));
 		printf("trying %s\n",
 			   Sock_ntop((SA *) &servaddr, sizeof(servaddr)));
