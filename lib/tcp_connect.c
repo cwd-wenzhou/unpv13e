@@ -16,6 +16,7 @@ tcp_connect(const char *host, const char *serv)
 				 host, serv, gai_strerror(n));
 	ressave = res;
 
+	//尝试getaddrinfo返回值的每一个IP地址
 	do {
 		sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 		if (sockfd < 0)
@@ -30,7 +31,7 @@ tcp_connect(const char *host, const char *serv)
 	if (res == NULL)	/* errno set from final connect() */
 		err_sys("tcp_connect error for %s, %s", host, serv);
 
-	freeaddrinfo(ressave);
+	freeaddrinfo(ressave);//把所有动态分配的内存空间返回系统
 
 	return(sockfd);
 }
