@@ -12,18 +12,18 @@ daemon_init(const char *pname, int facility)
 	pid_t	pid;
 
 	if ( (pid = Fork()) < 0)
-		return (-1);
+		return (-1);	//fork错误
 	else if (pid)
 		_exit(0);			/* parent terminates */
 
 	/* child 1 continues... */
 
-	if (setsid() < 0)			/* become session leader */
+	if (setsid() < 0)			/* become session leader 创建一个新的会话，从而不再有控制终端*/
 		return (-1);
 
-	Signal(SIGHUP, SIG_IGN);
+	Signal(SIGHUP, SIG_IGN);//忽略SIGHUP信号。SIG_IGN表示忽略该信号
 	if ( (pid = Fork()) < 0)
-		return (-1);
+		return (-1);			//fort出错
 	else if (pid)
 		_exit(0);			/* child 1 terminates */
 
