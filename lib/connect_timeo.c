@@ -1,4 +1,5 @@
 /* include connect_timeo */
+//可能干扰进程中现有的alarm调用，仅仅适合在未线程化和单线程的程序中使用
 #include	"unp.h"
 
 static void	connect_alarm(int);
