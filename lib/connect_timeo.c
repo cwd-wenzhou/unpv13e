@@ -9,7 +9,7 @@ connect_timeo(int sockfd, const SA *saptr, socklen_t salen, int nsec)
 	Sigfunc	*sigfunc;
 	int		n;
 
-	sigfunc = Signal(SIGALRM, connect_alarm);//建立一个信号处理函数
+	sigfunc = Signal(SIGALRM, connect_alarm);//建立一个信号处理函数。储存现有的信号处理函数
 	if (alarm(nsec) != 0)//alarm设置报警时钟，若已设置过，返回值为当前剩余秒数，否则为0。
 	//有返回值时输出一下报警，因为重置时间了。
 		err_msg("connect_timeo: alarm was already set");
