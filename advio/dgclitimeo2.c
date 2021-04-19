@@ -10,7 +10,8 @@ dg_cli(FILE *fp, int sockfd, const SA *pservaddr, socklen_t servlen)
 	tv.tv_sec = 5;
 	tv.tv_usec = 0;
 	Setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
-
+	//SO_RCVTIMEO为recvfrom设置读超时
+	//SO_SNDTIMEO为recv设置读超时
 	while (Fgets(sendline, MAXLINE, fp) != NULL) {
 
 		Sendto(sockfd, sendline, strlen(sendline), 0, pservaddr, servlen);

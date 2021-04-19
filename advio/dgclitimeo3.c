@@ -22,7 +22,7 @@ dg_cli(FILE *fp, int sockfd, const SA *pservaddr, socklen_t servlen)
 				err_sys("recvfrom error");
 		} else {
 			alarm(0);
-			recvline[n] = 0;	/* null terminate */
+			recvline[n] = 0;	/* null terminate 设置终止符*/
 			Fputs(recvline, stdout);
 		}
 	}

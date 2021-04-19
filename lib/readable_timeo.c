@@ -1,4 +1,6 @@
 /* include readable_timeo */
+//本函数适用于任何类型的套接字；
+//本函数不执行读操作，只是等待给定描述符变为可读
 #include	"unp.h"
 
 int
