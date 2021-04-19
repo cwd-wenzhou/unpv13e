@@ -9,14 +9,15 @@ connect_timeo(int sockfd, const SA *saptr, socklen_t salen, int nsec)
 	Sigfunc	*sigfunc;
 	int		n;
 
-	sigfunc = Signal(SIGALRM, connect_alarm);
-	if (alarm(nsec) != 0)
+	sigfunc = Signal(SIGALRM, connect_alarm);//建立一个信号处理函数
+	if (alarm(nsec) != 0)//alarm设置报警时钟，若已设置过，返回值为当前剩余秒数，否则为0。
+	//有返回值时输出一下报警，因为重置时间了。
 		err_msg("connect_timeo: alarm was already set");
 
 	if ( (n = connect(sockfd, saptr, salen)) < 0) {
 		close(sockfd);
 		if (errno == EINTR)
-			errno = ETIMEDOUT;
+			errno = ETIMEDOUT;//若被中断打断，就是超时，把EINTR改为ETIMEDOUT。
 	}
 	alarm(0);					/* turn off the alarm */
 	Signal(SIGALRM, sigfunc);	/* restore previous signal handler */
